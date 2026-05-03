@@ -15,7 +15,7 @@ class Process:
         self.time_on_cpu = 0
         self.state = State.READY
         self.priority = priority
-        self.time_to_run = random.randrange(5, 10)  # the time the process will run for in total before completion
+        self.time_to_run = random.randrange(5, 20)  # the time the process will run for in total before completion
         self.time_ran = 0
 
     def __str__(self):

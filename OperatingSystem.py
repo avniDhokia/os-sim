@@ -17,20 +17,20 @@ class OperatingSystem:
         # set up scheduler
         print("======" + Fore.GREEN + " Set-up " + Fore.RESET + "==============================")
 
-        self.scheduler = FirstInFirstOut()
+        self.scheduler = None
 
         print("Which scheduler?\n1. FIFO\n2. Round Robin\n3. MLFQ")
-        # selection = input()
+        selection = input()
 
-        # match selection:
-        #     case "1":
-        #         scheduler = (FirstInFirstOut())
-        #     case "2":
-        #         scheduler = (RoundRobin())
+        match selection:
+            case "1":
+                self.scheduler = (FirstInFirstOut())
+            case "2":
+                self.scheduler = (RoundRobin())
         #     case "3":
-        #         scheduler = (MultiLevelFeedbackQueues())
+        #         self.scheduler = (MultiLevelFeedbackQueues())
         #     case _:
-        #         scheduler = (FirstInFirstOut())
+        #         self.scheduler = (FirstInFirstOut())
 
         print("Selected: "+ Fore.GREEN + self.scheduler.get_name())
 
@@ -67,7 +67,7 @@ class OperatingSystem:
 
             # process switch
             try:
-                if (self.scheduler.should_switch_process( self.clock )):
+                if (self.scheduler.should_switch_process()):
                     print("wana switch")
 
                     # if there was a previously running process, reset its execution time

@@ -47,6 +47,83 @@ class FirstInFirstOut(Scheduler):
     def __init__(self):
         self.queue = queue.Queue()
         self.current_process = None
+
+    def print(self):
+        if self.current_process == None:
+            print("No currently running process")
+        else:
+            print("Currently running: " + str(self.current_process))
+        
+        for p in self.queue.queue:
+            print(p)
+
+
+    def get_name(self):
+        return "First In First Out Scheduler"
+
+    # this process both returns the next process to be scheduled, and confirms to the scheduler that this process will be scheduled
+    def next_process(self):
+
+        if not self.should_switch_process():
+            print("Should not switch processes.")
+            return
+
+        if len(self.queue.queue) == 0:
+            raise NoProcessesException("There are no processes to be scheduled")
+
+        p = self.queue.get()
+
+        while p.has_finished() or not p.state == State.READY:
+            if len(self.queue.queue) == 0:
+                raise NoProcessesException("There are no processes to be scheduled")
+            p = self.queue.get()
+        
+        # set previous process to zombie since it should be done
+        if not self.current_process == None:
+            self.current_process.set_state(State.ZOMBIE)
+
+        self.current_process = p
+        return p
+
+    def add_process(self, process):
+        self.queue.put(process)
+
+    def remove_process(self, process):
+        self.queue.remove(process)
+
+    def should_switch_process(self):
+
+        # no processes in the queue?
+        if len(self.queue.queue) == 0:
+
+            # if the current process has finished
+            if not self.current_process == None and self.current_process.has_finished():
+                self.current_process.set_state(State.ZOMBIE)
+                self.current_process = None
+                raise NoProcessesException("There are no processes to be scheduled")
+            # current process can still keep going    
+            else:
+                return False
+
+        # should switch if not currently running or current process has finished
+        return self.current_process == None or self.current_process.has_finished()
+
+    def get_current_state(self):
+        return self.queue.queue
+
+
+# round robin scheduler
+'''
+    pre-emptive
+    runs processes in a cycle, where each process runs for its given time quantum
+    time quantums are the same for each process
+    during its time quantum, a process may block for IO or voluntarily give up the CPU for whatever reason
+'''
+class RoundRobin(Scheduler):
+
+    def __init__(self):
+        self.queue = queue.Queue()
+        self.current_process = None
         self.quantum = 5
 
     def print(self):
@@ -59,7 +136,7 @@ class FirstInFirstOut(Scheduler):
             print(p)
 
     def get_name(self):
-        return "First In First Out Scheduler"
+        return "Round Robin Scheduler"
 
     def next_process(self):
 
@@ -109,9 +186,8 @@ class FirstInFirstOut(Scheduler):
         self.queue.remove(process)
         return
     
-    def should_switch_process(self, clock):
+    def should_switch_process(self):
 
-            
         if len(self.queue.queue) == 0:
 
             # if the current process has finished
@@ -122,10 +198,6 @@ class FirstInFirstOut(Scheduler):
             # current process can still keep going    
             else:
                 return False
-
-        # if queue is empty...
-        if len(self.queue.queue) == 0:
-            return False
 
         # if no process currently scheduled, we should switch to next
         if self.current_process == None:
@@ -144,37 +216,26 @@ class FirstInFirstOut(Scheduler):
     def get_current_state(self):
        return self.queue.queue
 
-# round robin scheduler
-'''
-    pre-emptive
-    runs processes in a cycle, where each process runs for its given time quantum
-    time quantums are the same for each process
-    during its time quantum, a process may block for IO or voluntarily give up the CPU for whatever reason
-'''
-class RoundRobin(Scheduler):
-
-    def get_name(self):
-        return "Round Robin Scheduler"
-
-    def next_process(self):
-        pass
-
-    def add_process(self, process):
-        pass
-
-    def get_current_state(self):
-        pass
-
 
 class MultiLevelFeedbackQueues(Scheduler):
 
-    def get_name(self):
-        return "Multi-Level Feedback Queue Scheduler"
+    def print(self):
+        pass
 
+    def get_name(self):
+        pass
+
+    # this process both returns the next process to be scheduled, and confirms to the scheduler that this process will be scheduled
     def next_process(self):
         pass
 
     def add_process(self, process):
+        pass
+
+    def remove_process(self, process):
+        pass
+
+    def should_switch_process(self):
         pass
 
     def get_current_state(self):
