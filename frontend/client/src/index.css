@@ -1,0 +1,15 @@
+
+.component{
+  margin: 1rem;
+  padding: 1.5rem;
+}
+
+#cpu{
+  border: solid 0.25rem rgb(247, 102, 252);
+  background-color: rgb(232, 161, 238);
+}
+
+#scheduler{
+  border: solid 0.25rem rgb(61, 219, 224);
+  background-color: rgb(128, 239, 243);
+}
