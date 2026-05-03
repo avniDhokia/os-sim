@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import queue
 from Process import State
+from Exceptions import NoProcessesException
 
 # abstract Scheduler class to be extended by use-able schedulers
 class Scheduler(ABC):
@@ -61,9 +62,6 @@ class FirstInFirstOut(Scheduler):
         return "First In First Out Scheduler"
 
     def next_process(self):
-        # if queue is empty return none
-        if len(self.queue.queue) == 0:      # maybe can throw exception / interrupt here instead
-            return None
 
         prev = self.current_process
 
@@ -75,7 +73,7 @@ class FirstInFirstOut(Scheduler):
         candidate = self.queue.get()
 
         # go through queue until we find a process with more work to execute
-        while (not candidate == None and (candidate.get_time_ran() >= candidate.get_time_to_run())):
+        while (not candidate == None and (candidate.has_finished())):
 
             # finished process so set state to ZOMBIE
             candidate.set_state(State.ZOMBIE)
@@ -88,8 +86,18 @@ class FirstInFirstOut(Scheduler):
         candidate.set_state(State.RUNNING)
         self.current_process = candidate
 
-        if not prev == None and prev.state == State.READY:
-            self.queue.put(prev)
+        # prev process should be handled
+        if not prev == None:
+
+            # process finished executing and should be cleared
+            if prev.state == State.ZOMBIE or prev.has_finished():
+                prev.set_state(State.ZOMBIE)
+
+            # process can be scheduled later
+            elif prev.state == State.READY:
+                self.queue.put(prev)
+
+            
 
         return self.current_process
 
@@ -102,6 +110,23 @@ class FirstInFirstOut(Scheduler):
         return
     
     def should_switch_process(self, clock):
+
+            
+        if len(self.queue.queue) == 0:
+
+            # if the current process has finished
+            if not self.current_process == None and self.current_process.has_finished():
+                self.current_process.set_state(State.ZOMBIE)
+                self.current_process = None
+                raise NoProcessesException("There are no processes to be scheduled")
+            # current process can still keep going    
+            else:
+                return False
+
+        # if queue is empty...
+        if len(self.queue.queue) == 0:
+            return False
+
         # if no process currently scheduled, we should switch to next
         if self.current_process == None:
             return True

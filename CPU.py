@@ -14,8 +14,10 @@ class CPU:
     def tick(self):
 
         if not self.current_process == None:
+            print("CPU running")
             self.current_process.run()
-
+        else:
+            print("CPU idle")
 
     # run the current process for the given amount of time
     # if there is time left over, return it
@@ -28,9 +30,9 @@ class CPU:
         self.current_process = process
 
         if (process == None):
-            print("CPU idle")
+            print("CPU scheduled to be idle")
         else:
-            print("CPU now processing " + process.get_name())
+            print("CPU scheduled to process " + process.get_name())
             
         return
 
