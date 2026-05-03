@@ -3,7 +3,7 @@ from Clock import Clock
 import time
 from Process import Process, State
 from CPU import CPU
-from colorama import Fore
+from colorama import Fore, Back
 import threading
 
 class OperatingSystem:
@@ -56,27 +56,26 @@ class OperatingSystem:
         # loop forever :)
         while True:
             
-            print("-------- tick -----------------------")
+            print(Fore.GREEN + "\n-------- tick -----------------------" + Fore.RESET)
             self.scheduler.print()
             print(self.process_table)
 
+            self.cpu.tick()            
+            print(Fore.GREEN + "-------------------------------------\n" + Fore.RESET)
 
+            # process switch
             if (self.scheduler.should_switch_process( self.clock )):
 
                 if not self.scheduler.current_process == None:
                     self.scheduler.current_process.reset_cpu_time()
                 self.cpu.set_process( self.scheduler.next_process() )
-           
-            self.cpu.tick()            
-
             
             # cleanup processes
             for p in self.process_table:
                 if p.state == State.ZOMBIE:
                     print("cleaning process " + p.get_name())
                     self.process_table.remove(p)
-            
-            print("-------------------------------------\n")
+
             time.sleep(0.5)
 
 

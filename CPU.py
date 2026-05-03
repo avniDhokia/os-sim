@@ -1,3 +1,5 @@
+from colorama import Fore
+
 class CPU:
 
     def __init__(self):
@@ -22,6 +24,7 @@ class CPU:
         return left_over_time
 
     def set_process(self, process):
+        print(Fore.CYAN + "Process Switch: " + Fore.RESET + str(self.current_process) + " -> " + str(process))
         self.current_process = process
 
         if (process == None):
