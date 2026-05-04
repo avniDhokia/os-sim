@@ -1,10 +1,10 @@
 
 
-export default function CPU(){
+export default function CPU({currentProcess}){
     return(
         <div id="cpu" class="component">
 
-            <p>this is cpu :3</p>
+            <p>CPU: {currentProcess}</p>
 
         </div>
     )

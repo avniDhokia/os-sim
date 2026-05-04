@@ -14,7 +14,7 @@ class CPU:
     def tick(self):
 
         if not self.current_process == None:
-            print("CPU running")
+            print("CPU running " + self.current_process.get_name())
             self.current_process.run()
         else:
             print("CPU idle")

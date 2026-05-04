@@ -5,21 +5,15 @@ import Scheduler from './components/scheduler'
 
 function App() {
 
-  const [data, setData] = useState({
-    n: "empty"
+  const [cpu, setCPU] = useState({
+    currentProcess: "Idle"
   });
-
-  const [two, detTwo] = useState({
-    num: "2"
-  })
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000").then((res) => {
-      console.log(res)
       res.json().then((data) => {
-        console.log(res)
-        setData({
-          n: data.Name
+        setCPU({
+          currentProcess: data.cpu.current_process
         });
       })
     })
@@ -29,10 +23,7 @@ function App() {
     <>
       <p>hiya :3</p>
       <Scheduler />
-      <CPU />
-
-      <p>{data.n}</p>
-      <p>{two.num}</p>
+      <CPU currentProcess={cpu.currentProcess} />
     </>
   )
 }
