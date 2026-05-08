@@ -13,3 +13,16 @@
   border: solid 0.25rem rgb(61, 219, 224);
   background-color: rgb(128, 239, 243);
 }
+
+#process{
+  border: solid 0.25rem rgb(22, 128, 30);
+  background-color: rgb(128, 243, 134);
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+.processQueue{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

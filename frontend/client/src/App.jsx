@@ -9,12 +9,24 @@ function App() {
     currentProcess: "Idle"
   });
 
+  const [scheduler, setScheduler] = useState({
+    name: "No Scheduler Selected",
+    state: "No Scheduler",
+    processes: "No Processes"
+  })
+
+
   useEffect(() => {
     fetch("http://127.0.0.1:5000").then((res) => {
       res.json().then((data) => {
         setCPU({
-          currentProcess: data.cpu.current_process
+          currentProcess: data.cpu.current_process.process
         });
+        setScheduler({
+          name: data.scheduler.name,
+          state: data.scheduler.state
+        })
+
       })
     })
   })
@@ -22,7 +34,7 @@ function App() {
   return (
     <>
       <p>hiya :3</p>
-      <Scheduler />
+      <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state}/>
       <CPU currentProcess={cpu.currentProcess} />
     </>
   )

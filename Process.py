@@ -1,5 +1,6 @@
 import random
 from enum import Enum
+import json
 
 class State(Enum):
         READY = 0
@@ -35,6 +36,18 @@ class Process:
     
     def get_time_to_run(self):
         return self.time_to_run
+    
+    def get_json(self):
+        p = {
+            "pid": self.pid,
+            "name": self.name,
+            "state": self.state.value,
+            "priority": self.priority,
+            "time_ran": self.time_ran,
+            "time_to_run": self.time_to_run
+        }
+
+        return json.dumps(p)
     
     def reset_cpu_time(self):
         self.time_on_cpu = 0

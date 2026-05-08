@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from OperatingSystem import OperatingSystem
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,8 @@ os = OperatingSystem()
 #       current process
 #
 #   scheduler:
-#       scheduler state
+#       scheduler name
+#       current state
 #
 #   processes:
 #       each process: 
@@ -26,11 +28,16 @@ def hello_world():
     os.run()
     current_process = "Idle"
     if not os.cpu.current_process == None:
-        current_process = os.cpu.current_process.get_name()
-
+        current_process = json.loads('{"process":' + os.cpu.current_process.get_json() + '}')
+        
+        
     return {
         "cpu": {
             "current_process": current_process
+        },
+        "scheduler": {
+            "name": os.scheduler.get_name(),
+            "state": os.scheduler.get_json()
         }
     }
 

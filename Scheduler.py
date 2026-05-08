@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import queue
 from Process import State
 from Exceptions import NoProcessesException
+import json
 
 # abstract Scheduler class to be extended by use-able schedulers
 class Scheduler(ABC):
@@ -34,6 +35,11 @@ class Scheduler(ABC):
     @abstractmethod
     def get_current_state(self):
         pass
+
+    @abstractmethod
+    def get_json(self):
+        pass
+
 
 # first in first out scheduler
 '''
@@ -109,8 +115,27 @@ class FirstInFirstOut(Scheduler):
         return self.current_process == None or self.current_process.has_finished()
 
     def get_current_state(self):
-        return self.queue.queue
+        return list(self.queue.queue)
 
+    def get_json(self):
+    
+        ls = list(self.queue.queue)
+        ps = len(ls)    # length of queue
+
+        if ps == 0:
+            return json.loads("{}")
+
+        ret = '{"processes": [' + ls[0].get_json()
+
+        for i in range(1, ps):
+            # ret.append(process.get_json())
+            process = ls[i]
+            ret = ret + ',' + process.get_json()
+
+        ret = ret + "]}"
+        
+        return json.loads(ret)
+        
 
 # round robin scheduler
 '''

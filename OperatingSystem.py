@@ -45,7 +45,7 @@ class OperatingSystem:
         self.process_table = []
 
         # random processes
-        for i in range(0, 3):
+        for i in range(0, 6):
             p = Process(pid=i, name=("Process " + str(i)))
             self.process_table.append(p)
             self.scheduler.add_process(p)
