@@ -8,10 +8,10 @@ export default function CPU({currentProcess}){
 
             <h1>CPU</h1>
 
-            {currentProcess && currentProcess.pid && (
+            {currentProcess && currentProcess.name && (
                 <ProcessComp pid={currentProcess.pid} name={currentProcess.name} state={currentProcess.state} priority={currentProcess.priority} timeRan={currentProcess.time_ran} timeToRun={currentProcess.time_to_run} />
             )}
-            {(!currentProcess || !currentProcess.pid) && (
+            {(!currentProcess || !currentProcess.name) && (
                 <>
                     <p>Idle</p>
                 </>

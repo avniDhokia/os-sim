@@ -7,6 +7,8 @@ from colorama import Fore, Back
 from Exceptions import NoProcessesException
 import threading
 
+TICK = 0.5  # time in seconds for 1 OS tick
+
 class OperatingSystem:
 
     def __init__(self):
@@ -84,4 +86,4 @@ class OperatingSystem:
                 print("cleaning process " + p.get_name())
                 self.process_table.remove(p)
 
-        time.sleep(0.5)
+        time.sleep(TICK)

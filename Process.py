@@ -41,13 +41,16 @@ class Process:
         p = {
             "pid": self.pid,
             "name": self.name,
-            "state": self.state.value,
+            "state": self.state.name,
             "priority": self.priority,
             "time_ran": self.time_ran,
             "time_to_run": self.time_to_run
         }
 
-        return json.dumps(p)
+        return p
+    
+    def get_json_str(self):
+        return json.dumps( self.get_json() )
     
     def reset_cpu_time(self):
         self.time_on_cpu = 0

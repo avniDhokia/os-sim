@@ -4,9 +4,9 @@ export default function ProcessComp({pid, name, state, priority, timeRan, timeTo
     return(
         <div id="process" class="component">
 
-            <p>{name} ({pid})</p>
-            <p>State: {state}, Priority: {priority}</p>
-            <p>{timeRan}/{timeToRun}</p>
+            <h1>{name} ({pid})</h1>
+            <h2>State: {state}, Priority: {priority}</h2>
+            <h3>{timeRan}/{timeToRun}</h3>
 
         </div>
     )

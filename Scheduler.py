@@ -89,6 +89,7 @@ class FirstInFirstOut(Scheduler):
             self.current_process.set_state(State.ZOMBIE)
 
         self.current_process = p
+        self.current_process.set_state(State.RUNNING)
         return p
 
     def add_process(self, process):
@@ -125,12 +126,12 @@ class FirstInFirstOut(Scheduler):
         if ps == 0:
             return json.loads("{}")
 
-        ret = '{"processes": [' + ls[0].get_json()
+        ret = '{"processes": [' + ls[0].get_json_str()
 
         for i in range(1, ps):
             # ret.append(process.get_json())
             process = ls[i]
-            ret = ret + ',' + process.get_json()
+            ret = ret + ',' + process.get_json_str()
 
         ret = ret + "]}"
         
@@ -249,12 +250,12 @@ class RoundRobin(Scheduler):
         if ps == 0:
             return json.loads("{}")
 
-        ret = '{"processes": [' + ls[0].get_json()
+        ret = '{"processes": [' + ls[0].get_json_str()
 
         for i in range(1, ps):
             # ret.append(process.get_json())
             process = ls[i]
-            ret = ret + ',' + process.get_json()
+            ret = ret + ',' + process.get_json_str()
 
         ret = ret + "]}"
         
