@@ -241,6 +241,25 @@ class RoundRobin(Scheduler):
     def get_current_state(self):
        return self.queue.queue
 
+    def get_json(self):
+    
+        ls = list(self.queue.queue)
+        ps = len(ls)    # length of queue
+
+        if ps == 0:
+            return json.loads("{}")
+
+        ret = '{"processes": [' + ls[0].get_json()
+
+        for i in range(1, ps):
+            # ret.append(process.get_json())
+            process = ls[i]
+            ret = ret + ',' + process.get_json()
+
+        ret = ret + "]}"
+        
+        return json.loads(ret)
+
 
 class MultiLevelFeedbackQueues(Scheduler):
 

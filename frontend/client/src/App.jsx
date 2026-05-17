@@ -33,7 +33,6 @@ function App() {
 
   return (
     <>
-      <p>hiya :3</p>
       <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state}/>
       <CPU currentProcess={cpu.currentProcess} />
     </>

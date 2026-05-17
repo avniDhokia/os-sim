@@ -6,13 +6,16 @@ export default function CPU({currentProcess}){
     return(
         <div id="cpu" class="component">
 
-            <p>CPU</p>
+            <h1>CPU</h1>
 
-            {currentProcess && (
+            {currentProcess && currentProcess.pid && (
                 <ProcessComp pid={currentProcess.pid} name={currentProcess.name} state={currentProcess.state} priority={currentProcess.priority} timeRan={currentProcess.time_ran} timeToRun={currentProcess.time_to_run} />
             )}
-            {!currentProcess && (
-                <p>Idle</p>
+            {(!currentProcess || !currentProcess.pid) && (
+                <>
+                    <p>Idle</p>
+                </>
+                
             )}
 
         </div>

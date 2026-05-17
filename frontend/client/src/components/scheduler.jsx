@@ -5,8 +5,7 @@ export default function Scheduler({name, currentProcess, state}){
     return(
         <div id="scheduler" class="component">
 
-            <p>this is scheduler :D</p>
-            <p>name: {name}</p>
+            <h1>{name}</h1>
             
             {/* if there is a currently running process, display it */}
             {state.currentProcess && (
