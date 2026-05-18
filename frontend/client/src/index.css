@@ -1,3 +1,6 @@
+
+/* general css */
+
 html{
   background-color: rgb(234, 211, 255);
 }
@@ -12,17 +15,33 @@ p{
   padding: 1.5rem;
 }
 
+
+
+/* specific componenet styling */
+
+
+/* cpu */
 #cpu{
   border: solid 0.25rem rgb(247, 102, 252);
   background-color: rgb(232, 161, 238);
   max-width: 50%;
 }
 
+
+/* scheduler */
 #scheduler{
   border: solid 0.25rem rgb(61, 219, 224);
   background-color: rgb(128, 239, 243);
 }
 
+.processQueue{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+
+/* process */
 #process{
   font-size: 70%;
   border: solid 0.25rem rgb(22, 128, 30);
@@ -36,31 +55,12 @@ p{
   font-size: 150%;
 }
 
+
+/* terminal */
 #terminal{
   max-width: 20rem;
-}
-
-#terminal, #terminal input{
-  background-color: black;
+  margin: 1rem;
   border: solid white 5px;
-  padding: 0.3rem;
-  font-family: monospace;
-  color: white;
-}
-
-#terminal input, #terminal input:focus{
-  width:fit-content;
-  outline: none;
-  border: none;
-}
-
-#terminal p{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-#terminal{
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -68,12 +68,21 @@ p{
   overflow:hidden;
 }
 
-#userSpace{
+#terminal, #terminal input{
+  background-color: black;
+  padding: 0.3rem;
+  font-family: monospace;
+  color: white;
+}
+
+#terminal input, #terminal input:focus{
+  outline: none;
+  border: none;
   flex-grow: 1;
 }
 
-.processQueue{
+#terminal p{
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  align-items: center;
 }
