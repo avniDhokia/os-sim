@@ -405,7 +405,6 @@ class MultiLevelFeedbackQueues(Scheduler):
             self.inner_ticks = 0
 
             # boost!
-            print("BOOST")
             for q in range(1, self.NUM_QUEUES):
                 for process in self.queues[q].queue:
                     self.queues[0].put(process)
@@ -435,25 +434,31 @@ class MultiLevelFeedbackQueues(Scheduler):
         return ret
 
     def get_json(self):
-        ret = '{"queues": [}'
+        ret = '{"queues": ['
+        ret = ret + self._jsonify_process_queue(self.queues[0])
 
-        for queue in self.queues:
-            ls = list(queue.queue)
-            ps = len(ls)    # length of queue
+        for i in range(1, self.NUM_QUEUES):
+            queue = self.queues[i]
+            ret = ret + "," + self._jsonify_process_queue(queue)
+        
+        ret = ret + "]}"
+        
+        return json.loads(ret)
+    
+    def _jsonify_process_queue(self, queue):
+        ls = list(queue.queue)
+        q_ret = '{"processes": ['
+        ps = len(ls)    # length of queue
 
-            if ps == 0:
-                return json.loads("{}")
-
-            q_ret = '{"processes": [' + ls[0].get_json_str()
+        if ps == 0:
+            q_ret = q_ret + '{}'
+        else:
+            q_ret = q_ret + ls[0].get_json_str()
 
             for i in range(1, ps):
                 # ret.append(process.get_json())
                 process = ls[i]
                 q_ret = q_ret + ',' + process.get_json_str()
 
-            q_ret = q_ret + "]}"
-            ret = ret + q_ret
-        
-        ret = ret + "]}"
-        
-        return json.loads(ret)
+        q_ret = q_ret + "]}"
+        return q_ret
