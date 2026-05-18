@@ -20,11 +20,11 @@ class OperatingSystem:
         self.next_pid = 0
 
         # set up scheduler
-        print("======" + Fore.GREEN + " Set-up " + Fore.RESET + "==============================")
+        print("======" + Fore.CYAN + " Set-up " + Fore.RESET + "==============================")
 
         self.scheduler = None
 
-        print("Which scheduler?\n1. FIFO\n2. Round Robin")#\n3. MLFQ")
+        print("Which scheduler?\n1. FIFO\n2. Round Robin\n3. MLFQ")
         selection = input()
 
         match selection:
@@ -32,12 +32,12 @@ class OperatingSystem:
                 self.scheduler = (FirstInFirstOut())
             case "2":
                 self.scheduler = (RoundRobin())
-        #     case "3":
-        #         self.scheduler = (MultiLevelFeedbackQueues())
+            case "3":
+                self.scheduler = (MultiLevelFeedbackQueues())
         #     case _:
         #         self.scheduler = (FirstInFirstOut())
 
-        print("Selected: "+ Fore.GREEN + self.scheduler.get_name())
+        print("Selected: "+ Fore.CYAN + self.scheduler.get_name())
 
         print(Fore.RESET + "============================================\n")
 
@@ -82,11 +82,6 @@ class OperatingSystem:
         # process switch
         try:
             if (self.scheduler.should_switch_process()):
-                print("swapping")
-                # if there was a previously running process, reset its execution time
-                if not self.scheduler.current_process == None:
-                    self.scheduler.current_process.reset_cpu_time()
-                
                 self.cpu.set_process( self.scheduler.next_process() )
 
         # there are no processes to schedule

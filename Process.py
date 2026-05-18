@@ -20,10 +20,13 @@ class Process:
         self.time_ran = 0
 
     def __str__(self):
-        return self.name + " (" + str(self.state) + "): " + str(self.time_ran) + "/" + str(self.time_to_run)
+        return self.name + " (" + str(self.state) + ", pri:" + str(self.priority) + "): " + str(self.time_ran) + "/" + str(self.time_to_run)
 
     def get_id(self):
         return self.pid
+
+    def get_priority(self):
+        return self.priority
 
     def get_name(self):
         return self.name
@@ -64,6 +67,13 @@ class Process:
         else:
             print("Error: tried assigning process state " + state + " which is not an option")
         
+    def set_priority(self, priority):
+        if isinstance(priority, int):
+            self.priority = priority
+            return
+        
+        print("Cannot set process priority to " + priority + " since it is not an int")
+        return
 
     def run(self, time=1):
         self.time_on_cpu = self.time_on_cpu + time
