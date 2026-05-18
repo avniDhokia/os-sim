@@ -16,6 +16,9 @@ class OperatingSystem:
         # set up cpu
         self.cpu = CPU()
 
+        # keep track of what the next pid should be
+        self.next_pid = 0
+
         # set up scheduler
         print("======" + Fore.GREEN + " Set-up " + Fore.RESET + "==============================")
 
@@ -47,13 +50,23 @@ class OperatingSystem:
         self.process_table = []
 
         # random processes
-        for i in range(0, 6):
+        i = self.next_pid
+        num = 6
+        for i in range(i, i + num):
             p = Process(pid=i, name=("Process " + str(i)))
             self.process_table.append(p)
             self.scheduler.add_process(p)
+        self.next_pid = self.next_pid + num
 
         # set up clock
         self.clock = Clock()
+
+    def add_process(self, name="New Process"):
+        p = Process(self.next_pid, name)
+        self.next_pid = self.next_pid + 1
+
+        self.scheduler.add_process(p)
+        return
 
 
     def run(self):

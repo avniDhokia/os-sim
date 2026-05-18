@@ -1,7 +1,6 @@
 import ProcessComp from './processComp'
 
 export default function Scheduler({name, currentProcess, state}){
-    console.log(state.processes)
     return(
         <div id="scheduler" class="component">
 

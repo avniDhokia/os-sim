@@ -2,7 +2,6 @@ import ProcessComp from "./processComp";
 
 
 export default function CPU({currentProcess}){
-    console.log(currentProcess)
     return(
         <div id="cpu" class="component">
 

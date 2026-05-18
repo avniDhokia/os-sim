@@ -6,7 +6,7 @@ export default function ProcessComp({pid, name, state, priority, timeRan, timeTo
 
             <h1>{name} ({pid})</h1>
             <h2>State: {state}, Priority: {priority}</h2>
-            <h3>{timeRan}/{timeToRun}</h3>
+            <p>{timeRan}/{timeToRun}</p>
 
         </div>
     )

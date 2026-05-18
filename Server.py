@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from OperatingSystem import OperatingSystem
 import json
@@ -8,20 +8,13 @@ CORS(app)
 
 os = OperatingSystem()
 
+# process request to create a new process
+@app.route("/addProcess", methods=['POST'])
+def add_process():
+    # get name from post
+    os.add_process(request.get_json()['name'])
 
-# data return structure
-#   { cpu, scheduler, processes }
-#
-#   cpu:
-#       current process
-#
-#   scheduler:
-#       scheduler name
-#       current state
-#
-#   processes:
-#       each process: 
-#
+    return jsonify({"status":"ok", "created": True}), 201
 
 @app.route("/")
 def hello_world():
