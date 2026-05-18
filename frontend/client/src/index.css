@@ -1,3 +1,11 @@
+html{
+  background-color: rgb(234, 211, 255);
+}
+
+p{
+  margin: 0;
+  padding: 0;
+}
 
 .component{
   margin: 1rem;
@@ -26,6 +34,42 @@
 
 #process p{
   font-size: 150%;
+}
+
+#terminal{
+  max-width: 20rem;
+}
+
+#terminal, #terminal input{
+  background-color: black;
+  border: solid white 5px;
+  padding: 0.3rem;
+  font-family: monospace;
+  color: white;
+}
+
+#terminal input, #terminal input:focus{
+  width:fit-content;
+  outline: none;
+  border: none;
+}
+
+#terminal p{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#terminal{
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  max-height: 10rem;
+  overflow:hidden;
+}
+
+#userSpace{
+  flex-grow: 1;
 }
 
 .processQueue{

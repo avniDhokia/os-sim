@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import CPU from './components/cpu'
 import Scheduler from './components/scheduler'
+import Terminal from './components/terminal'
 
 function App() {
 
@@ -60,6 +61,7 @@ function App() {
 
       </form>
       
+      <Terminal />
       <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state}/>
       <CPU currentProcess={cpu.currentProcess} />
     </>
