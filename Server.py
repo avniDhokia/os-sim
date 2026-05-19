@@ -23,8 +23,6 @@ def hello_world():
     current_process = "Idle"
     if not os.cpu.current_process == None:
         current_process = json.loads('{"process":' + os.cpu.current_process.get_json_str() + '}')
-    
-    print(os.scheduler.get_json())
         
     return {
         "cpu": {

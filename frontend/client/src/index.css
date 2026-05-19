@@ -35,6 +35,9 @@ p{
 }
 
 .processQueue{
+  margin: 0.5rem;
+  padding: 0.25rem;
+  border: solid black 2px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
