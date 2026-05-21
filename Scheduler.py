@@ -272,7 +272,7 @@ class MultiLevelFeedbackQueues(Scheduler):
 
     def __init__(self):
         self.NUM_QUEUES = 4
-        self.BOOST_INTERVAL = 25
+        self.BOOST_INTERVAL = self.NUM_QUEUES * 10
         self.inner_ticks = 0
 
         # initialise queues and quantums
@@ -405,13 +405,20 @@ class MultiLevelFeedbackQueues(Scheduler):
             self.inner_ticks = 0
 
             # boost!
-            for q in range(1, self.NUM_QUEUES):
-                for process in self.queues[q].queue:
-                    self.queues[0].put(process)
-                    process.set_priority(0)
-                self.queues[q] = queue.Queue()
+            self.boost()
 
         return False
+
+
+    # boost all processes to q0
+    def boost(self):
+        for q in range(1, self.NUM_QUEUES):
+            for process in self.queues[q].queue:
+                self.queues[0].put(process)
+                process.set_priority(0)
+            self.queues[q] = queue.Queue()  
+
+        return
 
 
     # returns the queue number with the next process

@@ -4,9 +4,30 @@ export default function Scheduler({name, currentProcess, state}){
     
     // multi level feedback queue scheduler
     if (name === "Multi-level Feedback Queue Scheduler"){
+
+        // boost processes
+        function boostProcesses(e){
+            e.preventDefault();
+
+            fetch("http://127.0.0.1:5000/boostProcesses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+            })
+            .catch(console.error);
+        }
+
+
         return (
             <div id="scheduler" class="component">
                 <h1>{name}</h1>
+
+                {/* form to boost processes to q0 */}
+                <form onSubmit={boostProcesses} action="http://localhost:5173/" method="post">
+
+                    {/* submit */}
+                    <button type="submit" name="boostProcessesButton">Boost Processes to Q0</button>
+
+                </form>
 
                 {/* if there are queues, display them */}
                 {state.queues && state.queues.length > 0 ? (

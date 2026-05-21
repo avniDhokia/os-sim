@@ -17,6 +17,14 @@ def add_process():
 
     return jsonify({"status":"ok", "created": True}), 201
 
+
+# boost processes to q0
+@app.route("/boostProcesses", methods=['POST'])
+def boost_processes():
+    os.scheduler.boost()
+    return jsonify({"status":"ok", "created": True}), 201
+
+
 @app.route("/")
 def hello_world():
     os.run()
