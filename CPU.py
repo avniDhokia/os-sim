@@ -4,6 +4,8 @@ class CPU:
 
     def __init__(self):
         self.current_process = None
+        self.switching = False          # setProcess -> switching True      tick -> switching False
+        self.tick_events = {}           # setProcess -> switch event        tick -> clear switch event
 
     def run(self):
         on = True
@@ -12,12 +14,27 @@ class CPU:
             pass
     
     def tick(self):
+        self.tick_events = "{"
+
+        if self.switching:
+            print("CPU switching processes")
+            self.tick_events = self.tick_events + '"switch": "Process Switch!"'
+            self.switching = False
+            return
+        
+        self.tick_events = self.tick_events + "}"
 
         if not self.current_process == None:
             print("CPU running " + self.current_process.get_name())
+            
             self.current_process.run()
         else:
             print("CPU idle")
+
+    # get events that happened this tick
+    def get_tick_events(self):
+        return self.tick_events
+
 
     # run the current process for the given amount of time
     # if there is time left over, return it
@@ -26,6 +43,8 @@ class CPU:
         return left_over_time
 
     def set_process(self, process):
+        self.switching = True
+
         print(Fore.CYAN + "Process Switch: " + Fore.RESET + str(self.current_process) + " -> " + str(process))
         self.current_process = process
 

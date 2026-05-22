@@ -32,13 +32,17 @@ def hello_world():
     if not os.cpu.current_process == None:
         current_process = json.loads('{"process":' + os.cpu.current_process.get_json_str() + '}')
         
+    print(os.cpu.get_tick_events())
+
     return {
         "cpu": {
-            "current_process": current_process
+            "current_process": current_process,
+            "events": json.loads(os.cpu.get_tick_events())
         },
         "scheduler": {
             "name": os.scheduler.get_name(),
-            "state": os.scheduler.get_json()
+            "state": os.scheduler.get_json(),
+            "events": json.loads(os.scheduler.get_tick_events())
         }
     }
 
