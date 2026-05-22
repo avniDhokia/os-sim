@@ -16,16 +16,14 @@ class CPU:
             pass
     
     def tick(self):
-        self.tick_events = "{"
+        self.tick_events = []
 
         if self.switching:
             print("CPU switching processes")
-            self.tick_events = self.tick_events + '"switch": "Process Switch!"}'
+            self.tick_events.append("switch")
             self.switching = False
             return
         
-        self.tick_events = self.tick_events + "}"
-
         if not self.current_process == None:
             print("CPU running " + self.current_process.get_name())
             
@@ -34,9 +32,8 @@ class CPU:
             print("CPU idle")
 
     # get events that happened this tick
-    def get_json_tick_events(self):
-        print(self.tick_events)
-        return json.loads(self.tick_events)
+    def get_tick_events(self):
+        return self.tick_events
 
 
     # run the current process for the given amount of time

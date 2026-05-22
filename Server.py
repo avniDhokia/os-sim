@@ -30,14 +30,13 @@ def boost_processes():
 #   cpu
 #       current_process
 #       events
-#           switch
+#           [switch?]
 #   scheduler
 #       name
 #       state
 #           processes
 #       events
-#           boost
-#
+#           [boost?,new_process?]
 #
 
 @app.route("/")
@@ -50,12 +49,12 @@ def hello_world():
     return {
         "cpu": {
             "current_process": current_process,
-            "events": os.cpu.get_json_tick_events()
+            "events": os.cpu.get_tick_events()
         },
         "scheduler": {
             "name": os.scheduler.get_name(),
             "state": os.scheduler.get_json(),
-            "events": os.scheduler.get_json_tick_events()
+            "events": os.scheduler.get_tick_events()
         }
     }
 

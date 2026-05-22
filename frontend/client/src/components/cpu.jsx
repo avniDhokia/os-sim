@@ -8,7 +8,7 @@ export default function CPU({currentProcess, events}){
 
             <h1>CPU</h1>
 
-            {events.switch && (
+            {events.includes("switch") && (
                 <p>Process Switch!</p>
             )}
 

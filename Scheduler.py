@@ -42,7 +42,7 @@ class Scheduler(ABC):
         pass
 
     @abstractmethod
-    def get_json_tick_events(self):
+    def get_tick_events(self):
         pass
 
 
@@ -142,8 +142,8 @@ class FirstInFirstOut(Scheduler):
         
         return json.loads(ret)
         
-    def get_json_tick_events(self):
-        return {}
+    def get_tick_events(self):
+        return []
 
 # round robin scheduler
 '''
@@ -273,8 +273,8 @@ class RoundRobin(Scheduler):
         
         return json.loads(ret)
 
-    def get_json_tick_events(self):
-        return {}
+    def get_tick_events(self):
+        return []
 
 class MultiLevelFeedbackQueues(Scheduler):
 
@@ -284,6 +284,7 @@ class MultiLevelFeedbackQueues(Scheduler):
         self.inner_ticks = 0
         self.tick_events = {}
         self.just_boosted = False
+        self.just_added = False
 
         # initialise queues and quantums
         self.queues = []
@@ -379,6 +380,7 @@ class MultiLevelFeedbackQueues(Scheduler):
 
     def add_process(self, process):
         # add process to highest priority queue
+        self.just_added = True
         self.queues[0].put(process)
         process.set_priority(0)
 
@@ -390,6 +392,7 @@ class MultiLevelFeedbackQueues(Scheduler):
     # equivalent to a scheduler tick
     def should_switch_process(self):
         self.just_boosted = False
+        self.just_added = False
         next_q = self._next_queue_with_processes()
 
         # if currently no process
@@ -485,12 +488,13 @@ class MultiLevelFeedbackQueues(Scheduler):
         q_ret = q_ret + "]}"
         return q_ret
     
-    def get_json_tick_events(self):
-        self.tick_events = "{"
+    def get_tick_events(self):
+        self.tick_events = []
 
         if self.just_boosted:
-            self.tick_events = self.tick_events + '"boost":"Boosted!"'
+            self.tick_events.append("boost")
+        
+        if self.just_added:
+            self.tick_events.append("new_process")
 
-        self.tick_events = self.tick_events + "}"
-
-        return json.loads(self.tick_events)
+        return self.tick_events
