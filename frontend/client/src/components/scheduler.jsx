@@ -1,6 +1,6 @@
 import ProcessComp from './processComp'
 
-export default function Scheduler({name, currentProcess, state}){
+export default function Scheduler({name, currentProcess, state, events}){
     
     // multi level feedback queue scheduler
     if (name === "Multi-level Feedback Queue Scheduler"){
@@ -28,6 +28,10 @@ export default function Scheduler({name, currentProcess, state}){
                     <button type="submit" name="boostProcessesButton">Boost Processes to Q0</button>
 
                 </form>
+
+                {events.boost && (
+                    <p>Proceses boosted</p>
+                )}
 
                 {/* if there are queues, display them */}
                 {state.queues && state.queues.length > 0 ? (

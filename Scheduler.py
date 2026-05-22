@@ -397,23 +397,18 @@ class MultiLevelFeedbackQueues(Scheduler):
 
             # no more processes to run
             if next_q == -1:
-                print("wont switch bc no more processes")
                 return False
         
             # should switch to next process
-            print("shold switch bc next process")
             return True
 
         # current process exceeded quantum or finished
         if self.current_process.time_on_cpu >= self.quantums[ self.current_process.get_priority() ] or self.current_process.has_finished():
-            print("should switch bc quantum exceeded / finished")
             return True
         
         # higher priority processes to run?
         # (higher priority = lower queue number)
         if next_q < self.current_process.get_priority():
-            print("shud switch bc higher prio avauable")
-            print("next: " + str(next_q))
             return True
         
         # boost mechanic: every so often, all processes boosted to q0
@@ -423,7 +418,6 @@ class MultiLevelFeedbackQueues(Scheduler):
             # boost!
             self.boost()
 
-        print("reached end so don't swihch")
         return False
 
 

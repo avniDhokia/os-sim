@@ -28,7 +28,7 @@ export default function Terminal(){
             fetch("http://127.0.0.1:5000/addProcess", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: "test" })
+                body: JSON.stringify({ name: "User Process" })
                 })
             .catch(console.error);
 

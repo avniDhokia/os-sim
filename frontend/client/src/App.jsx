@@ -7,13 +7,15 @@ import Terminal from './components/terminal'
 function App() {
 
   const [cpu, setCPU] = useState({
-    currentProcess: "Idle"
+    currentProcess: "Idle",
+    events: "No Events"
   });
 
   const [scheduler, setScheduler] = useState({
     name: "No Scheduler Selected",
     state: "No Scheduler",
-    processes: "No Processes"
+    processes: "No Processes",
+    events: "No Events"
   })
 
 
@@ -22,11 +24,13 @@ function App() {
       res.json().then((data) => {
         console.log(data)
         setCPU({
-          currentProcess: data.cpu.current_process.process
+          currentProcess: data.cpu.current_process.process,
+          events: data.cpu.events
         });
         setScheduler({
           name: data.scheduler.name,
-          state: data.scheduler.state
+          state: data.scheduler.state,
+          events: data.scheduler.events
         })
       })
     })
@@ -63,8 +67,8 @@ function App() {
       </form>
       
       <Terminal />
-      <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state}/>
-      <CPU currentProcess={cpu.currentProcess} />
+      <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state} events={scheduler.events}/>
+      <CPU currentProcess={cpu.currentProcess} events={cpu.events}/>
     </>
   )
 }
