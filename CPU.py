@@ -1,11 +1,13 @@
 from colorama import Fore
+import json
+
 
 class CPU:
 
     def __init__(self):
         self.current_process = None
         self.switching = False          # setProcess -> switching True      tick -> switching False
-        self.tick_events = {}           # setProcess -> switch event        tick -> clear switch event
+        self.tick_events = "{}"           # setProcess -> switch event        tick -> clear switch event
 
     def run(self):
         on = True
@@ -18,7 +20,7 @@ class CPU:
 
         if self.switching:
             print("CPU switching processes")
-            self.tick_events = self.tick_events + '"switch": "Process Switch!"'
+            self.tick_events = self.tick_events + '"switch": "Process Switch!"}'
             self.switching = False
             return
         
@@ -32,8 +34,9 @@ class CPU:
             print("CPU idle")
 
     # get events that happened this tick
-    def get_tick_events(self):
-        return self.tick_events
+    def get_json_tick_events(self):
+        print(self.tick_events)
+        return json.loads(self.tick_events)
 
 
     # run the current process for the given amount of time

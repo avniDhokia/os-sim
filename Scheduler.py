@@ -41,6 +41,10 @@ class Scheduler(ABC):
     def get_json(self):
         pass
 
+    @abstractmethod
+    def get_json_tick_events(self):
+        pass
+
 
 # first in first out scheduler
 '''
@@ -138,6 +142,8 @@ class FirstInFirstOut(Scheduler):
         
         return json.loads(ret)
         
+    def get_json_tick_events(self):
+        return {}
 
 # round robin scheduler
 '''
@@ -267,6 +273,8 @@ class RoundRobin(Scheduler):
         
         return json.loads(ret)
 
+    def get_json_tick_events(self):
+        return {}
 
 class MultiLevelFeedbackQueues(Scheduler):
 
@@ -274,6 +282,8 @@ class MultiLevelFeedbackQueues(Scheduler):
         self.NUM_QUEUES = 4
         self.BOOST_INTERVAL = self.NUM_QUEUES * 10
         self.inner_ticks = 0
+        self.tick_events = {}
+        self.just_boosted = False
 
         # initialise queues and quantums
         self.queues = []
@@ -377,7 +387,9 @@ class MultiLevelFeedbackQueues(Scheduler):
     def remove_process(self, process):
         pass
 
+    # equivalent to a scheduler tick
     def should_switch_process(self):
+        self.just_boosted = False
         next_q = self._next_queue_with_processes()
 
         # if currently no process
@@ -402,8 +414,6 @@ class MultiLevelFeedbackQueues(Scheduler):
         self.inner_ticks = self.inner_ticks + 1
 
         if self.inner_ticks >= self.BOOST_INTERVAL:
-            self.inner_ticks = 0
-
             # boost!
             self.boost()
 
@@ -412,8 +422,12 @@ class MultiLevelFeedbackQueues(Scheduler):
 
     # boost all processes to q0
     def boost(self):
+        self.inner_ticks = 0
+        self.just_boosted = True
+
         for q in range(1, self.NUM_QUEUES):
             for process in self.queues[q].queue:
+                process.reset_cpu_time()
                 self.queues[0].put(process)
                 process.set_priority(0)
             self.queues[q] = queue.Queue()  
@@ -469,3 +483,13 @@ class MultiLevelFeedbackQueues(Scheduler):
 
         q_ret = q_ret + "]}"
         return q_ret
+    
+    def get_json_tick_events(self):
+        self.tick_events = "{"
+
+        if self.just_boosted:
+            self.tick_events = self.tick_events + '"boost":"Boosted!"'
+
+        self.tick_events = self.tick_events + "}"
+
+        return json.loads(self.tick_events)

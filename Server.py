@@ -24,6 +24,21 @@ def boost_processes():
     os.scheduler.boost()
     return jsonify({"status":"ok", "created": True}), 201
 
+#
+#   response structure:
+#
+#   cpu
+#       current_process
+#       events
+#           switch
+#   scheduler
+#       name
+#       state
+#           processes
+#       events
+#           boost
+#
+#
 
 @app.route("/")
 def hello_world():
@@ -32,17 +47,15 @@ def hello_world():
     if not os.cpu.current_process == None:
         current_process = json.loads('{"process":' + os.cpu.current_process.get_json_str() + '}')
         
-    print(os.cpu.get_tick_events())
-
     return {
         "cpu": {
             "current_process": current_process,
-            "events": json.loads(os.cpu.get_tick_events())
+            "events": os.cpu.get_json_tick_events()
         },
         "scheduler": {
             "name": os.scheduler.get_name(),
             "state": os.scheduler.get_json(),
-            "events": json.loads(os.scheduler.get_tick_events())
+            "events": os.scheduler.get_json_tick_events()
         }
     }
 
