@@ -51,7 +51,7 @@ class OperatingSystem:
 
         # random processes
         i = self.next_pid
-        num = 6
+        num = 3
         for i in range(i, i + num):
             p = Process(pid=i, name=("Process " + str(i)))
             self.process_table.append(p)
@@ -91,7 +91,7 @@ class OperatingSystem:
         # cleanup processes
         for p in self.process_table:
             if p.state == State.ZOMBIE:
-                print("cleaning process " + p.get_name())
+                print("Cleaning process " + p.get_name())
                 self.process_table.remove(p)
 
         time.sleep(TICK)

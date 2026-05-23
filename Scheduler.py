@@ -58,6 +58,8 @@ class FirstInFirstOut(Scheduler):
     def __init__(self):
         self.queue = queue.Queue()
         self.current_process = None
+        self.tick_events = []
+        self.just_added = False
 
     def print(self):
         if self.current_process == None:
@@ -99,11 +101,13 @@ class FirstInFirstOut(Scheduler):
 
     def add_process(self, process):
         self.queue.put(process)
+        self.just_added = True
 
     def remove_process(self, process):
         self.queue.remove(process)
 
     def should_switch_process(self):
+        self.just_added = False
 
         # no processes in the queue?
         if len(self.queue.queue) == 0:
@@ -143,7 +147,12 @@ class FirstInFirstOut(Scheduler):
         return json.loads(ret)
         
     def get_tick_events(self):
-        return []
+        self.tick_events = []
+        
+        if self.just_added:
+            self.tick_events.append("new_process")
+
+        return self.tick_events
 
 # round robin scheduler
 '''
@@ -158,6 +167,7 @@ class RoundRobin(Scheduler):
         self.queue = queue.Queue()
         self.current_process = None
         self.quantum = 5
+        self.just_added = False
 
     def print(self):
         print(Fore.CYAN + "\n-------- scheduler ------------------" + Fore.RESET)
@@ -218,6 +228,7 @@ class RoundRobin(Scheduler):
 
     def add_process(self, process):
         self.queue.put(process)
+        self.just_added = True
         return
 
     def remove_process(self, process):
@@ -225,6 +236,7 @@ class RoundRobin(Scheduler):
         return
     
     def should_switch_process(self):
+        self.just_added = False
 
         if len(self.queue.queue) == 0:
 
@@ -274,7 +286,12 @@ class RoundRobin(Scheduler):
         return json.loads(ret)
 
     def get_tick_events(self):
-        return []
+        self.tick_events = []
+
+        if self.just_added:
+            self.tick_events.append("new_process")
+
+        return self.tick_events
 
 class MultiLevelFeedbackQueues(Scheduler):
 
@@ -347,26 +364,33 @@ class MultiLevelFeedbackQueues(Scheduler):
                 prev.set_state(State.READY)
 
         # prep next process
-        next_process = None
+        candidate = None
 
         # find next process
-        for queue in self.queues:
-            if len(queue.queue) > 0:
-                next_process = queue.get()
+        for q in self.queues:
 
-                # keep going through queue if processed finished and queue not empty
-                while next_process.has_finished() and len(queue.queue) != 0:
-                    next_process.set_state(State.ZOMBIE)
-                    next_process = queue.get()
+            if not q.empty():
+                candidate = q.get()
+
+                # go through queue until we find a process with more work to execute
+                while not q.empty() and ( (candidate == None) or (candidate.has_finished()) ):
+
+                    # finished process so set state to ZOMBIE
+                    candidate.set_state(State.ZOMBIE)
+                    candidate = q.get()
                 
-            
-                if not next_process.has_finished():
+                # candidate found so exit search, otherwise search next queue
+                if candidate != None:
                     break
+
+        if candidate == None:               # maybe can throw exception / interrupt here instead
+            self.current_process = None
+            return None
         
         # valid process found
-        if not next_process == None and not next_process.has_finished():
-            next_process.set_state(State.RUNNING)
-            self.current_process = next_process
+        if not candidate == None and not candidate.has_finished():
+            candidate.set_state(State.RUNNING)
+            self.current_process = candidate
         
         return self.current_process
 
@@ -405,13 +429,13 @@ class MultiLevelFeedbackQueues(Scheduler):
             # should switch to next process
             return True
 
-        # current process exceeded quantum or finished
-        if self.current_process.time_on_cpu >= self.quantums[ self.current_process.get_priority() ] or self.current_process.has_finished():
+        # current process exceeded quantum or finished (and no other processes)
+        if (self.current_process.time_on_cpu >= self.quantums[ self.current_process.get_priority() ] and next_q > -1) or self.current_process.has_finished():
             return True
         
         # higher priority processes to run?
         # (higher priority = lower queue number)
-        if next_q < self.current_process.get_priority():
+        if next_q < self.current_process.get_priority() and next_q > -1:
             return True
         
         # boost mechanic: every so often, all processes boosted to q0
