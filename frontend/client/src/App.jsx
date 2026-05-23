@@ -53,23 +53,36 @@ function App() {
   }
 
   return (
-    <>
+    <div id="app">
 
-      {/* form to add new processes */}
-      <form onSubmit={addProcess} action="http://localhost:5173/" method="post">
 
-        {/* choose name of new process */}
-        <input type="text" value={newProcessName} onChange={e => setNewProcessName(e.target.value)} />
+      <div>
 
-        {/* submit */}
-        <button type="submit" name="addProcessButton">Add Process</button>
+        <div id="user-panel">
 
-      </form>
-      
-      <Terminal />
+          {/* form to add new processes */}
+          <form id="gui" onSubmit={addProcess} action="http://localhost:5173/" method="post">
+
+            {/* choose name of new process */}
+            <input type="text" value={newProcessName} onChange={e => setNewProcessName(e.target.value)} />
+
+            {/* submit */}
+            <button type="submit" name="addProcessButton">Add Process</button>
+
+          </form>
+          
+          <Terminal />
+
+        </div>
+
+        <CPU currentProcess={cpu.currentProcess} events={cpu.events}/>
+
+      </div>
+
+
       <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state} events={scheduler.events}/>
-      <CPU currentProcess={cpu.currentProcess} events={cpu.events}/>
-    </>
+      
+    </div>
   )
 }
 

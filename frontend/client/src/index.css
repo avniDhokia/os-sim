@@ -13,8 +13,15 @@ p{
 .component{
   margin: 1rem;
   padding: 1.5rem;
+  border-radius: 0.5rem;
 }
 
+/* overall page */
+#app{
+  display: flex;
+  flex-direction: row;
+
+}
 
 
 /* specific componenet styling */
@@ -24,7 +31,7 @@ p{
 #cpu{
   border: solid 0.25rem rgb(247, 102, 252);
   background-color: rgb(232, 161, 238);
-  max-width: 50%;
+  width: max-content;
 }
 
 
@@ -32,6 +39,7 @@ p{
 #scheduler{
   border: solid 0.25rem rgb(61, 219, 224);
   background-color: rgb(128, 239, 243);
+  flex-grow: 1;
 }
 
 .processQueue{
@@ -44,15 +52,35 @@ p{
 }
 
 
+/* user panel */
+#user-panel{
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* gui */
+#gui{
+  display: flex;
+  flex-direction: column;
+}
+
+
+
 /* process */
-#process{
-  font-size: 70%;
+.process{
+  font-size: 60%;
   padding: 0.5rem;
   margin: 0.25rem;
   max-width: 10rem;
 }
 
-#process p{
+.process h1, .process h2{
+  margin-top: 0;
+  margin-bottom: 2.5%;
+}
+
+.process p{
   font-size: 150%;
 }
 

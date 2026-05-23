@@ -6,7 +6,7 @@ export default function ProcessComp({pid, name, state, priority, timeRan, timeTo
     let colour = colourMap[ Number(pid) % colourMap.length ]
 
     return(
-        <div id="process" class={"component " + colour}>
+        <div class={"process component " + colour}>
 
             <h1>{name} ({pid})</h1>
             <h2>State: {state}, Priority: {priority}</h2>
