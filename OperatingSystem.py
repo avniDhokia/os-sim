@@ -75,7 +75,7 @@ class OperatingSystem:
         # loop forever :)
         # while True:
             
-        print(Fore.GREEN + "\n-------- tick -----------------------" + Fore.RESET)
+        print(Fore.GREEN + "\n======== tick =================================" + Fore.RESET)
         try:
             self.cpu.tick()
         except ProcessBlockedException as e:
@@ -94,7 +94,7 @@ class OperatingSystem:
         for p in self.blocked_list:
             print(str(p))
 
-        print(Fore.GREEN + "-------------------------------------\n" + Fore.RESET)
+        print(Fore.GREEN + "===============================================\n" + Fore.RESET)
 
         # check if any blocked processes can be unblocked now
         for p in self.blocked_list:
@@ -102,7 +102,7 @@ class OperatingSystem:
                 p.set_state(State.READY)
                 self.blocked_list.remove(p)
                 self.scheduler.add_process(p)
-                
+
                 print("\n" + Fore.YELLOW + "Unblocked: " + str(p) + Fore.RESET)
 
         # process switch
