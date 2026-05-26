@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import CPU from './components/cpu'
 import Scheduler from './components/scheduler'
+import OperatingSystem from './components/operatingSystem'
 import Terminal from './components/terminal'
 
 function App() {
@@ -10,6 +11,10 @@ function App() {
     currentProcess: "Idle",
     events: "No Events"
   });
+
+  const [os, setOS] = useState({
+    blockedProcesses: "No Blocked Processes"
+  })
 
   const [scheduler, setScheduler] = useState({
     name: "No Scheduler Selected",
@@ -27,10 +32,13 @@ function App() {
           currentProcess: data.cpu.current_process.process,
           events: data.cpu.events
         });
+        setOS({
+          blockedProcesses: data.os.blocked_processes
+        })
         setScheduler({
-          name: data.scheduler.name,
-          state: data.scheduler.state,
-          events: data.scheduler.events
+          name: data.os.scheduler.name,
+          state: data.os.scheduler.state,
+          events: data.os.scheduler.events
         })
       })
     })
@@ -79,8 +87,8 @@ function App() {
 
       </div>
 
-
-      <Scheduler name={scheduler.name} currentProcess={cpu.currentProcess} state={scheduler.state} events={scheduler.events}/>
+      <OperatingSystem os={os} cpu={cpu} scheduler={scheduler} />
+      
       
     </div>
   )

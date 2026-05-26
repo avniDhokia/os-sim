@@ -31,12 +31,14 @@ def boost_processes():
 #       current_process
 #       events
 #           [switch?]
-#   scheduler
-#       name
-#       state
-#           processes
-#       events
-#           [boost?,new_process?]
+#   os
+#       blocked_processes
+#       scheduler
+#           name
+#           state
+#               processes
+#           events
+#               [boost?,new_process?]
 #
 
 @app.route("/")
@@ -46,16 +48,23 @@ def hello_world():
     if not os.cpu.current_process == None:
         current_process = json.loads('{"process":' + os.cpu.current_process.get_json_str() + '}')
         
+    print(os.get_blocked_processes_json())
+
     return {
         "cpu": {
             "current_process": current_process,
             "events": os.cpu.get_tick_events()
         },
-        "scheduler": {
-            "name": os.scheduler.get_name(),
-            "state": os.scheduler.get_json(),
-            "events": os.scheduler.get_tick_events()
+        "os":{
+            "blocked_processes": os.get_blocked_processes_json(),
+            "scheduler": {
+                "name": os.scheduler.get_name(),
+                "state": os.scheduler.get_json(),
+                "events": os.scheduler.get_tick_events()
+            }
         }
+
+
     }
 
 if __name__ == '__main__':

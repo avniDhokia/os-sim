@@ -6,6 +6,7 @@ from CPU import CPU
 from colorama import Fore, Back
 from Exceptions import NoProcessesException, ProcessBlockedException
 import threading
+import json
 
 TICK = 1  # time in seconds for 1 OS tick
 
@@ -68,6 +69,20 @@ class OperatingSystem:
 
         self.scheduler.add_process(p)
         return
+
+    def get_blocked_processes_json(self):
+        if len(self.blocked_list) == 0:
+            return json.loads("{}")
+
+        ret = '{"processes": [' + self.blocked_list[0].get_json_str()
+
+        for process in self.blocked_list:
+            ret = ret + ',' + process.get_json_str()
+
+        ret = ret + "]}"
+        
+        return json.loads(ret)
+
 
 
     def run(self):

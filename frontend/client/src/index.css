@@ -35,12 +35,25 @@ p{
 }
 
 
-/* scheduler */
-#scheduler{
+/* operatingSystem */
+#operatingSystem{
   border: solid 0.25rem rgb(61, 219, 224);
   background-color: rgb(128, 239, 243);
   flex-grow: 1;
 }
+
+/* scheduler */
+#scheduler{
+  border: solid 0.25rem rgb(120, 201, 238);
+  background-color: rgb(128, 207, 243);
+}
+
+/* blocked process list */
+.blockedProcessList{
+  margin: 1rem;
+  padding: 0.5rem;
+}
+
 
 .processQueue{
   margin: 0.5rem;
