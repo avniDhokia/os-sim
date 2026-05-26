@@ -82,13 +82,13 @@ class FirstInFirstOut(Scheduler):
             return
 
         if len(self.queue.queue) == 0:
-            raise NoProcessesException("There are no processes to be scheduled")
+            raise NoProcessesException()
 
         p = self.queue.get()
 
         while p.has_finished() or not p.state == State.READY:
             if len(self.queue.queue) == 0:
-                raise NoProcessesException("There are no processes to be scheduled")
+                raise NoProcessesException()
             p = self.queue.get()
         
         # set previous process to zombie since it should be done
@@ -104,7 +104,11 @@ class FirstInFirstOut(Scheduler):
         self.just_added = True
 
     def remove_process(self, process):
-        self.queue.remove(process)
+        if self.current_process == process:
+            self.current_process = None
+            return
+
+        self.queue.queue.remove(process)
 
     def should_switch_process(self):
         self.just_added = False
@@ -116,7 +120,7 @@ class FirstInFirstOut(Scheduler):
             if not self.current_process == None and self.current_process.has_finished():
                 self.current_process.set_state(State.ZOMBIE)
                 self.current_process = None
-                raise NoProcessesException("There are no processes to be scheduled")
+                raise NoProcessesException()
             # current process can still keep going    
             else:
                 return False
@@ -244,7 +248,7 @@ class RoundRobin(Scheduler):
             if not self.current_process == None and self.current_process.has_finished():
                 self.current_process.set_state(State.ZOMBIE)
                 self.current_process = None
-                raise NoProcessesException("There are no processes to be scheduled")
+                raise NoProcessesException()
             # current process can still keep going    
             else:
                 return False

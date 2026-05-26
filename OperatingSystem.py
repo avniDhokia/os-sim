@@ -4,10 +4,10 @@ import time
 from Process import Process, State
 from CPU import CPU
 from colorama import Fore, Back
-from Exceptions import NoProcessesException
+from Exceptions import NoProcessesException, ProcessBlockedException
 import threading
 
-TICK = 0.5  # time in seconds for 1 OS tick
+TICK = 1  # time in seconds for 1 OS tick
 
 class OperatingSystem:
 
@@ -48,6 +48,7 @@ class OperatingSystem:
 
         # set up processes
         self.process_table = []
+        self.blocked_list = []
 
         # random processes
         i = self.next_pid
@@ -75,9 +76,34 @@ class OperatingSystem:
         # while True:
             
         print(Fore.GREEN + "\n-------- tick -----------------------" + Fore.RESET)
-        self.cpu.tick()
+        try:
+            self.cpu.tick()
+        except ProcessBlockedException as e:
+            blocked_process = self.cpu.get_current_process()
+
+            self.blocked_list.append(blocked_process)
+            self.scheduler.remove_process(blocked_process)
+            self.cpu.stop_running()
+
+            blocked_process.set_state(State.BLOCKED)
+            print("\n" + Fore.YELLOW + "Blocked: " + str(blocked_process) + Fore.RESET)
+
         self.scheduler.print()
+
+        print("\nBlocked list:")
+        for p in self.blocked_list:
+            print(str(p))
+
         print(Fore.GREEN + "-------------------------------------\n" + Fore.RESET)
+
+        # check if any blocked processes can be unblocked now
+        for p in self.blocked_list:
+            if p.can_unblock():
+                p.set_state(State.READY)
+                self.blocked_list.remove(p)
+                self.scheduler.add_process(p)
+                
+                print("\n" + Fore.YELLOW + "Unblocked: " + str(p) + Fore.RESET)
 
         # process switch
         try:
@@ -87,6 +113,7 @@ class OperatingSystem:
         # there are no processes to schedule
         except NoProcessesException as e:
             self.cpu.stop_running()
+        
         
         # cleanup processes
         for p in self.process_table:

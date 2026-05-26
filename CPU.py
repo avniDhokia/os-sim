@@ -1,6 +1,6 @@
 from colorama import Fore
 import json
-
+from Exceptions import ProcessBlockedException
 
 class CPU:
 
@@ -27,7 +27,10 @@ class CPU:
         if not self.current_process == None:
             print("CPU running " + self.current_process.get_name())
             
-            self.current_process.run()
+            try:
+                self.current_process.run()
+            except ProcessBlockedException as e:
+                raise ProcessBlockedException()
         else:
             print("CPU idle")
 
