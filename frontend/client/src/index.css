@@ -51,6 +51,11 @@ p{
   flex-wrap: wrap;
 }
 
+/* alert */
+.alert{
+  color: rgb(68, 68, 68);
+  font-style: italic;
+}
 
 /* user panel */
 #user-panel{

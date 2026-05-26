@@ -30,11 +30,11 @@ export default function Scheduler({name, currentProcess, state, events}){
                 </form>
 
                 {events.includes("boost") && (
-                    <p>Processes Boosted</p>
+                    <p class="alert">Processes Boosted</p>
                 )}
 
                 {events.includes("new_process") && (
-                    <p>New Process Added</p>
+                    <p class="alert">New Process Added</p>
                 )}
 
                 {/* if there are queues, display them */}

@@ -9,7 +9,7 @@ export default function CPU({currentProcess, events}){
             <h1>CPU</h1>
 
             {events.includes("switch") && (
-                <p>Process Switch!</p>
+                <p class="alert">Process Switch</p>
             )}
 
             {currentProcess && currentProcess.name && (
