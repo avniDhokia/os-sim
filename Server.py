@@ -48,7 +48,6 @@ def hello_world():
     if not os.cpu.current_process == None:
         current_process = json.loads('{"process":' + os.cpu.current_process.get_json_str() + '}')
         
-    print(os.get_blocked_processes_json())
 
     return {
         "cpu": {

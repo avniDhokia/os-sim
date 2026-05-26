@@ -8,7 +8,7 @@ from Exceptions import NoProcessesException, ProcessBlockedException
 import threading
 import json
 
-TICK = 1  # time in seconds for 1 OS tick
+TICK = 0.5  # time in seconds for 1 OS tick
 
 class OperatingSystem:
 
@@ -76,10 +76,13 @@ class OperatingSystem:
 
         ret = '{"processes": [' + self.blocked_list[0].get_json_str()
 
-        for process in self.blocked_list:
+        for process_i in range(1, len(self.blocked_list)):
+            process = self.blocked_list[process_i]
             ret = ret + ',' + process.get_json_str()
 
         ret = ret + "]}"
+        print("ret: ")
+        print(ret)
         
         return json.loads(ret)
 
