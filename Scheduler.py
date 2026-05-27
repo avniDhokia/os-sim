@@ -418,7 +418,17 @@ class MultiLevelFeedbackQueues(Scheduler):
         return
 
     def remove_process(self, process):
-        pass
+        if self.current_process == process:
+            self.current_process = None
+            return
+
+        for qi in range(0, self.NUM_QUEUES):
+            q = self.queues[qi].queue
+            if process in q:
+                q.remove(process)
+            
+        return
+    
 
     # equivalent to a scheduler tick
     def should_switch_process(self):
