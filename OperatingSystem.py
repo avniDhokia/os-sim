@@ -8,7 +8,7 @@ from Exceptions import NoProcessesException, ProcessBlockedException
 import threading
 import json
 
-TICK = 0.5  # time in seconds for 1 OS tick
+TICK = 1  # time in seconds for 1 OS tick
 
 class OperatingSystem:
 
@@ -71,11 +71,18 @@ class OperatingSystem:
         return
 
     def remove_process_id(self, id):
+        if id.isdigit():
+            id = int(id)
+
         to_remove = None
 
         for p in self.process_table:
             if p.get_id() == id:
-                self.scheduler.remove_process(p)
+                if p.state == State.BLOCKED:
+                    self.blocked_list.remove(p)
+                else:
+                    self.scheduler.remove_process(p)
+
                 to_remove = p
                 break
         
