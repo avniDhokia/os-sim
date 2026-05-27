@@ -2,7 +2,6 @@ import ProcessComp from './processComp'
 import Scheduler from './scheduler';
 
 export default function OperatingSystem({os, cpu, scheduler}){
-    console.log(os)
     return (
         <div id="operatingSystem">
 

@@ -18,6 +18,14 @@ def add_process():
     return jsonify({"status":"ok", "created": True}), 201
 
 
+# process request to kill a process
+@app.route("/killProcess", methods=['POST'])
+def kill_process():
+    os.remove_process_id( int(request.get_json()['id']) )
+    
+    return jsonify({"status":"ok", "created": True}), 201
+
+
 # boost processes to q0
 @app.route("/boostProcesses", methods=['POST'])
 def boost_processes():

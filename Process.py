@@ -21,7 +21,7 @@ class Process:
         self.priority = priority
 
         # tracking info
-        self.time_to_run = random.randrange(7, 15)  # the time the process will run for in total before completion
+        self.time_to_run = random.randrange(7, 45)  # the time the process will run for in total before completion
         self.time_ran = 0
 
         # blocking vars

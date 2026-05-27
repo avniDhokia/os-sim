@@ -53,7 +53,7 @@ class OperatingSystem:
 
         # random processes
         i = self.next_pid
-        num = 3
+        num = 8
         for i in range(i, i + num):
             p = Process(pid=i, name=("Process " + str(i)))
             self.process_table.append(p)
@@ -70,6 +70,21 @@ class OperatingSystem:
         self.scheduler.add_process(p)
         return
 
+    def remove_process_id(self, id):
+        to_remove = None
+
+        for p in self.process_table:
+            if p.get_id() == id:
+                self.scheduler.remove_process(p)
+                to_remove = p
+                break
+        
+        if not to_remove == None:
+            self.process_table.remove(p)
+            return True
+        
+        return False
+
     def get_blocked_processes_json(self):
         if len(self.blocked_list) == 0:
             return json.loads("{}")
@@ -81,8 +96,6 @@ class OperatingSystem:
             ret = ret + ',' + process.get_json_str()
 
         ret = ret + "]}"
-        print("ret: ")
-        print(ret)
         
         return json.loads(ret)
 

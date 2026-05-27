@@ -182,7 +182,7 @@ class RoundRobin(Scheduler):
             print("Currently running: " + str(self.current_process))
         
         for p in self.queue.queue:
-            print(p)
+            print(str(p))
 
         print(Fore.CYAN + "-------------------------------------\n" + Fore.RESET)        
 

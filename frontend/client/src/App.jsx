@@ -27,7 +27,6 @@ function App() {
   useEffect(() => {
     fetch("http://127.0.0.1:5000").then((res) => {
       res.json().then((data) => {
-        console.log(data)
         setCPU({
           currentProcess: data.cpu.current_process.process,
           events: data.cpu.events
@@ -47,6 +46,7 @@ function App() {
 
   // data for making new processes
   const [newProcessName, setNewProcessName] = useState("User Process");
+  const [showNewProcessWarning, setShowNewProcessWarning] = useState(false)
 
   // add a new process
   function addProcess(e){
@@ -60,6 +60,24 @@ function App() {
     .catch(console.error);
   }
 
+
+  // data for killing processes
+  const [killID, setKillID] = useState("Enter Process ID");
+  const [showKillIDWarning, setShowKillIDWarning] = useState(false)
+
+  // add a new process
+  function killProcess(e){
+    e.preventDefault();
+      
+    fetch("http://127.0.0.1:5000/killProcess", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: killID })
+    })
+    .catch(console.error);
+  }
+
+
   return (
     <div id="app">
 
@@ -69,7 +87,7 @@ function App() {
         <div id="user-panel">
 
           {/* form to add new processes */}
-          <form id="gui" onSubmit={addProcess} action="http://localhost:5173/" method="post">
+          <form class="mini-form" id="addProcessForm" onSubmit={addProcess} action="http://localhost:5173/" method="post">
 
             {/* choose name of new process */}
             <input type="text" value={newProcessName} onChange={e => setNewProcessName(e.target.value)} />
@@ -78,6 +96,23 @@ function App() {
             <button type="submit" name="addProcessButton">Add Process</button>
 
           </form>
+
+          {showNewProcessWarning && (
+            <p class="warning">Enter some text</p>
+          )}
+
+
+          {/* form to kill processes */}
+          <form class="mini-form" id="killProcessForm" onSubmit={killProcess} action="http://localhost:5173/" method="post">
+
+            {/* choose name of new process */}
+            <input type="number" value={killID} onChange={e => setKillID(e.target.value)} />
+
+            {/* submit */}
+            <button type="submit" name="killProcessButton">Kill Process</button>
+
+          </form>
+        
           
           <Terminal />
 

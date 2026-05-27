@@ -74,6 +74,25 @@ h2{
   flex-direction: column;
 }
 
+/* mini-form */
+.mini-form{
+  display: flex;
+  flex-direction: row;
+}
+
+.mini-form input{
+  flex-grow: 1;
+}
+
+
+
+
+/* warnings */
+.warning{
+  color: red;
+}
+
+
 /* blocked process list */
 .blockedProcessList{
   margin: 1rem;
@@ -103,14 +122,6 @@ h2{
   display: flex;
   flex-direction: column;
 }
-
-
-/* gui */
-#gui{
-  display: flex;
-  flex-direction: column;
-}
-
 
 
 /* process */
