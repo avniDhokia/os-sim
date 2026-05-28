@@ -8,6 +8,9 @@ from colorama import Fore, Back
 # abstract Scheduler class to be extended by use-able schedulers
 class Scheduler(ABC):
 
+    def __init__(self):
+        self.tick_events = []
+
     @abstractmethod
     def print(self):
         pass
@@ -23,11 +26,11 @@ class Scheduler(ABC):
 
     @abstractmethod
     def add_process(self, process):
-        pass
+        self.tick_events.append("new_process")
 
     @abstractmethod
     def remove_process(self, process):
-        pass
+        self.tick_events.append("killed_process")
 
     @abstractmethod
     def should_switch_process(self):
@@ -41,9 +44,15 @@ class Scheduler(ABC):
     def get_json(self):
         pass
 
-    @abstractmethod
     def get_tick_events(self):
-        pass
+        ret = self.tick_events
+        self.tick_events = []
+
+        return ret
+
+    def _add_tick_event(self, string):
+        self.tick_events.append(string)
+        print(self.tick_events)
 
 
 # first in first out scheduler
@@ -56,10 +65,10 @@ class Scheduler(ABC):
 class FirstInFirstOut(Scheduler):
 
     def __init__(self):
+        super().__init__()
         self.queue = queue.Queue()
         self.current_process = None
-        self.tick_events = []
-        self.just_added = False
+
 
     def print(self):
         if self.current_process == None:
@@ -100,10 +109,12 @@ class FirstInFirstOut(Scheduler):
         return p
 
     def add_process(self, process):
+        super().add_process(process)
         self.queue.put(process)
-        self.just_added = True
 
     def remove_process(self, process):
+        super().remove_process(process)
+
         if self.current_process == process:
             self.current_process = None
             return
@@ -150,13 +161,6 @@ class FirstInFirstOut(Scheduler):
         
         return json.loads(ret)
         
-    def get_tick_events(self):
-        self.tick_events = []
-        
-        if self.just_added:
-            self.tick_events.append("new_process")
-
-        return self.tick_events
 
 # round robin scheduler
 '''
@@ -168,10 +172,10 @@ class FirstInFirstOut(Scheduler):
 class RoundRobin(Scheduler):
 
     def __init__(self):
+        super().__init__()
         self.queue = queue.Queue()
         self.current_process = None
         self.quantum = 5
-        self.just_added = False
 
     def print(self):
         print(Fore.CYAN + "\n-------- scheduler ------------------" + Fore.RESET)
@@ -231,11 +235,13 @@ class RoundRobin(Scheduler):
         return self.current_process
 
     def add_process(self, process):
+        super().add_process(process)
         self.queue.put(process)
-        self.just_added = True
         return
 
     def remove_process(self, process):
+        super().remove_process(process)
+
         if self.current_process == process:
             self.current_process = None
             return
@@ -292,23 +298,13 @@ class RoundRobin(Scheduler):
         
         return json.loads(ret)
 
-    def get_tick_events(self):
-        self.tick_events = []
-
-        if self.just_added:
-            self.tick_events.append("new_process")
-
-        return self.tick_events
-
 class MultiLevelFeedbackQueues(Scheduler):
 
     def __init__(self):
+        super().__init__()
         self.NUM_QUEUES = 4
         self.BOOST_INTERVAL = self.NUM_QUEUES * 10
         self.inner_ticks = 0
-        self.tick_events = {}
-        self.just_boosted = False
-        self.just_added = False
 
         # initialise queues and quantums
         self.queues = []
@@ -411,13 +407,15 @@ class MultiLevelFeedbackQueues(Scheduler):
 
     def add_process(self, process):
         # add process to highest priority queue
-        self.just_added = True
+        super().add_process(process)
         self.queues[0].put(process)
         process.set_priority(0)
 
         return
 
     def remove_process(self, process):
+        super().remove_process(process)
+
         if self.current_process == process:
             self.current_process = None
             return
@@ -468,7 +466,8 @@ class MultiLevelFeedbackQueues(Scheduler):
     # boost all processes to q0
     def boost(self):
         self.inner_ticks = 0
-        self.just_boosted = True
+        
+        self._add_tick_event("boost")
 
         for q in range(1, self.NUM_QUEUES):
             for process in self.queues[q].queue:
@@ -529,13 +528,3 @@ class MultiLevelFeedbackQueues(Scheduler):
         q_ret = q_ret + "]}"
         return q_ret
     
-    def get_tick_events(self):
-        self.tick_events = []
-
-        if self.just_boosted:
-            self.tick_events.append("boost")
-        
-        if self.just_added:
-            self.tick_events.append("new_process")
-
-        return self.tick_events

@@ -37,6 +37,10 @@ export default function Scheduler({name, currentProcess, state, events}){
                     <p class="alert">New Process Added</p>
                 )}
 
+                {events.includes("killed_process") && (
+                    <p class="alert">Process Killed</p>
+                )}
+
                 {/* if there are queues, display them */}
                 {state.queues && state.queues.length > 0 ? (
                     state.queues.map((q, qi) => (
@@ -72,6 +76,10 @@ export default function Scheduler({name, currentProcess, state, events}){
 
                 {events.includes("new_process") && (
                     <p class="alert">New Process Added</p>
+                )}
+
+                {events.includes("killed_process") && (
+                    <p class="alert">Process Killed</p>
                 )}
             
             {/* if there are queued processes, display them */}
