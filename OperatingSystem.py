@@ -72,17 +72,13 @@ class OperatingSystem:
         return
 
     def remove_process_id(self, id):
-        print("REMOVE " + str(id))
         if id.isdigit():
-            print("intified " + str(int(id)))
             id = int(id)
 
         to_remove = None
 
         for p in self.process_table:
-            print("=" + str(p.get_id()))
             if p.get_id() == id:
-                print("yes")
                 if p.state == State.BLOCKED:
                     self.blocked_list.remove(p)
                 else:
@@ -90,11 +86,9 @@ class OperatingSystem:
 
                 to_remove = p
                 break
-            print("no")
         
         if not to_remove == None:
             self.process_table.remove(p)
-            print("removed correct")
             return True
         
         return False
