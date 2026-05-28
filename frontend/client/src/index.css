@@ -181,13 +181,12 @@ h2{
 
 /* terminal */
 #terminal{
-  max-width: 20rem;
+  width: 20rem;
   margin: 1rem;
   border: solid white 5px;
   display: flex;
   flex-direction: column;
   justify-content: end;
-  max-height: 10rem;
   overflow:hidden;
 }
 

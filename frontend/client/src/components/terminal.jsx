@@ -1,15 +1,47 @@
 import { useState, useEffect } from 'react'
 
+// help text with command usage info
+function HelpText(){
+    return (
+        <div>
+
+            {/* help */}
+            <p><strong>help</strong></p>
+            <p><em>show help menu</em></p>
+
+            <br />
+
+            {/* new process */}
+            <p><strong>np [process_name]</strong></p>
+            <p><em>create new process</em></p>
+
+            <br />
+
+            {/* kill process */}
+            <p><strong>kill process_id</strong></p>
+            <p><em>kill specific process</em></p>
+
+            <br />
+
+        </div>
+    )
+}
+
+
+
 export default function Terminal(){
 
     const [userText, setUserText] = useState("")
     const [pastText, setPastText] = useState("")
+
+    const [showHelp, setShowHelp] = useState(true)
 
     let promptStart = "Prompt>> "
 
     function handleKeyDown(e) {
         if (event.key == 'Enter'){
 
+            setShowHelp(false)
             let ret = processCommand(userText)
             setPastText( pastText => (ret));
             
@@ -18,7 +50,6 @@ export default function Terminal(){
     }
 
     function processCommand(command){
-
         if (command == ""){
             return ""
         }
@@ -46,7 +77,7 @@ export default function Terminal(){
         else if (words[0] === "kill"){
 
             if (words.length < 2){
-                return "Incorrect usage. Correct: 'kill <processID>'"
+                return "Incorrect usage. Try 'help' to learn more"
             }
 
 
@@ -62,7 +93,7 @@ export default function Terminal(){
         }
         // help - help
         else if (words[0] === "help"){
-            return "help -> help   .   .   .   .   np -> new process"
+            setShowHelp(true)
         }
         // unknown command
         else{
@@ -73,6 +104,11 @@ export default function Terminal(){
 
     return (
         <div id="terminal">
+
+            {showHelp && (
+                <HelpText />
+            )}
+            
 
             {pastText}
             <p>
