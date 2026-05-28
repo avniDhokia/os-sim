@@ -65,6 +65,14 @@ export default function Scheduler({name, currentProcess, state, events}){
         <div id="scheduler" class="component">
 
             <h1>{name}</h1>
+
+                {events.includes("boost") && (
+                    <p class="alert">Processes Boosted</p>
+                )}
+
+                {events.includes("new_process") && (
+                    <p class="alert">New Process Added</p>
+                )}
             
             {/* if there are queued processes, display them */}
             {state.processes && (

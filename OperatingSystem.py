@@ -66,18 +66,23 @@ class OperatingSystem:
     def add_process(self, name="New Process"):
         p = Process(self.next_pid, name)
         self.next_pid = self.next_pid + 1
-
+        
+        self.process_table.append(p)
         self.scheduler.add_process(p)
         return
 
     def remove_process_id(self, id):
+        print("REMOVE " + str(id))
         if id.isdigit():
+            print("intified " + str(int(id)))
             id = int(id)
 
         to_remove = None
 
         for p in self.process_table:
+            print("=" + str(p.get_id()))
             if p.get_id() == id:
+                print("yes")
                 if p.state == State.BLOCKED:
                     self.blocked_list.remove(p)
                 else:
@@ -85,9 +90,11 @@ class OperatingSystem:
 
                 to_remove = p
                 break
+            print("no")
         
         if not to_remove == None:
             self.process_table.remove(p)
+            print("removed correct")
             return True
         
         return False
