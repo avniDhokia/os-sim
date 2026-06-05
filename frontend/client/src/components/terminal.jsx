@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { sendChangeScheduler, sendKillProcess, sendNewProcess } from '../comms'
 
 // help text with command usage info
 function HelpText(){
@@ -64,13 +65,7 @@ export default function Terminal(){
                 p_name = words[1]
             }
 
-            fetch("http://127.0.0.1:5000/addProcess", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: p_name })
-                })
-            .catch(console.error);
-
+            sendNewProcess(p_name)
             return "Process Created"
         }
         // kill process - kill
@@ -80,15 +75,7 @@ export default function Terminal(){
                 return "Incorrect usage. Try 'help' to learn more"
             }
 
-
-
-            fetch("http://127.0.0.1:5000/killProcess", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: words[1] })
-                })
-            .catch(console.error);
-
+            sendKillProcess(words[1])
             return "Process Killed"
         }
         // help - help
