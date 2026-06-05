@@ -21,17 +21,19 @@ def add_process():
 # process request to kill a process
 @app.route("/killProcess", methods=['POST'])
 def kill_process():
-    os.remove_process_id( (request.get_json()['id']) )
+    valid = os.remove_process_id( (request.get_json()['id']) )
     
-    return jsonify({"status":"ok", "created": True}), 201
+    if valid:
+        return jsonify({"status":"ok", "created": True}), 201
+    
+    return jsonify({"status":"error","message":"Process not found"}), 400
 
 
 # request to change scheduler
 @app.route("/changeScheduler", methods=['POST'])
 def change_scheduler():
     new_scheduler = request.get_json()['scheduler']
-    changed = os.change_scheduler(new_scheduler)
-    print(changed)
+    valid = os.change_scheduler(new_scheduler)
 
     return jsonify({"status":"ok", "created": True}), 201
 
@@ -43,7 +45,7 @@ def boost_processes():
     return jsonify({"status":"ok", "created": True}), 201
 
 #
-#   response structure:
+#   response structure (json):
 #
 #   cpu
 #       current_process

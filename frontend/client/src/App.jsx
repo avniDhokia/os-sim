@@ -4,6 +4,7 @@ import CPU from './components/cpu'
 import Scheduler from './components/scheduler'
 import OperatingSystem from './components/operatingSystem'
 import Terminal from './components/terminal'
+import {sendNewProcess, sendKillProcess, sendChangeScheduler} from './comms'
 
 function App() {
 
@@ -52,12 +53,16 @@ function App() {
   function addProcess(e){
     e.preventDefault();
 
-    fetch("http://127.0.0.1:5000/addProcess", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newProcessName })
-    })
-    .catch(console.error);
+    if (newProcessName == ""){
+      setShowNewProcessWarning(true)
+    }
+
+    else{
+      setShowNewProcessWarning(false)
+      sendNewProcess(newProcessName)
+
+    }
+
   }
 
 
@@ -68,14 +73,24 @@ function App() {
   // add a new process
   function killProcess(e){
     e.preventDefault();
-      
-    fetch("http://127.0.0.1:5000/killProcess", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: killID })
-    })
-    .catch(console.error);
+    sendKillProcess(killID)
+
   }
+
+
+  // change scheduler
+  const [newScheduler, setNewScheduler] = useState(null)
+
+  function changeScheduler(e){
+    e.preventDefault();
+
+    if (newScheduler !== null){
+      console.log("switching to " + newScheduler)
+      sendChangeScheduler(newScheduler)
+    }
+  }
+
+
 
 
   return (
@@ -113,6 +128,30 @@ function App() {
 
           </form>
         
+
+          {/* form to switch scheduler */}
+          {/* <form class="mini-form" id="changeSchedulerForm" onSubmit={changeScheduler} action="http://localhost:5173/" method="post">
+
+            <div>
+              <input type="radio" id="fifo" name="scheduler" value="fifo" checked />
+              <label for="fifo">First In First Out</label>
+            </div>
+
+            <div>
+              <input type="radio" id="round-robin" name="scheduler" value="round-robin" />
+              <label for="round-robin">Round Robin</label>
+            </div>
+
+            <div>
+              <input type="radio" id="mlfq" name="scheduler" value="mlfq" />
+              <label for="mlfq">Multi Level Feedback Queues</label>
+            </div> */}
+
+            {/* submit */}
+            {/* <button type="submit" name="changeSchedulerButton">Change Scheduler</button>
+
+          </form> */}
+
           
           <Terminal />
 

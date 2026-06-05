@@ -47,7 +47,7 @@ function handleNewProcess(words){
     return "Process Created"
 }
 
-function handleKillProcess(words){
+async function handleKillProcess(words){
     if (words.length < 2){
         return "Incorrect usage. Try 'help' or 'kill help' to learn more"
     }
@@ -56,9 +56,9 @@ function handleKillProcess(words){
         return "kill help :)"
     }
 
+    let res = await sendKillProcess(words[1])
+    return res.message
 
-    sendKillProcess(words[1])
-    return "Process Killed"
 }
 
 function handleChangeScheduler(words){
@@ -88,18 +88,18 @@ export default function Terminal(){
 
     let promptStart = "Prompt>> "
 
-    function handleKeyDown(e) {
+    async function handleKeyDown(e) {
         if (event.key == 'Enter'){
 
             setShowHelp(false)
-            let ret = processCommand(userText)
+            let ret = await processCommand(userText)
             setPastText( pastText => (ret));
             
             setUserText("")
         }
     }
 
-    function processCommand(command){
+    async function processCommand(command){
         if (command == ""){
             return ""
         }
@@ -113,7 +113,9 @@ export default function Terminal(){
 
         // kill process - kill
         else if (words[0] === "kill"){
-            return handleKillProcess(words)
+            let p = await handleKillProcess(words)
+            console.log(p)
+            return p
         }
 
         // change scheduler - sch

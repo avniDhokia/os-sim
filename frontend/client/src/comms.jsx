@@ -8,13 +8,20 @@ export function sendNewProcess(name){
   .catch(console.error);
 }
 
-export function sendKillProcess(id){
-  fetch("http://127.0.0.1:5000/killProcess", {
+export async function sendKillProcess(id){
+  const res = await fetch("http://127.0.0.1:5000/killProcess", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id: id })
   })
   .catch(console.error);
+
+  if (res.ok){
+    return {ok: true, message:"Process Killed"}
+  }
+
+  let data = await res.json();
+  return {ok:false, message: data.message}
 }
 
 
