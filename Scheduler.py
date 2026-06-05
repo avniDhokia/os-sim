@@ -245,8 +245,9 @@ class RoundRobin(Scheduler):
         if self.current_process == process:
             self.current_process = None
             return
-
-        self.queue.queue.remove(process)
+        
+        if process in self.queue.queue:
+            self.queue.queue.remove(process)
     
     def should_switch_process(self):
         self.just_added = False
