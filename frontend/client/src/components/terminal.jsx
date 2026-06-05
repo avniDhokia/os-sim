@@ -24,9 +24,58 @@ function HelpText(){
 
             <br />
 
+            {/* change scheduler */}
+            <p><strong>sch scheduler</strong></p>
+            <p><em>change scheduler to: <strong>fifo</strong>, <strong>round-robin</strong> or <strong>mlfq</strong></em></p>
+
+            <br />
+
         </div>
     )
 }
+
+// handle commands
+
+function handleNewProcess(words){
+    let p_name = "User Process"
+
+    if (words.length > 1){
+        p_name = words[1]
+    }
+
+    sendNewProcess(p_name)
+    return "Process Created"
+}
+
+function handleKillProcess(words){
+    if (words.length < 2){
+        return "Incorrect usage. Try 'help' or 'kill help' to learn more"
+    }
+
+    if (words[1] == "help"){
+        return "kill help :)"
+    }
+
+
+    sendKillProcess(words[1])
+    return "Process Killed"
+}
+
+function handleChangeScheduler(words){
+    if (words.length < 2){
+        return "Incorrect usage. Try 'help' or 'sch help to learn more"
+    }
+
+    if (words[1] == "help"){
+        return "sch help :)"
+    }
+
+
+    sendChangeScheduler(words[1])
+    return "Scheduler Changed"
+}
+
+
 
 
 
@@ -59,25 +108,19 @@ export default function Terminal(){
 
         // new process - np
         if (words[0] === "np"){
-            let p_name = "User Process"
-
-            if (words.length > 1){
-                p_name = words[1]
-            }
-
-            sendNewProcess(p_name)
-            return "Process Created"
+            return handleNewProcess(words)
         }
+
         // kill process - kill
         else if (words[0] === "kill"){
-
-            if (words.length < 2){
-                return "Incorrect usage. Try 'help' to learn more"
-            }
-
-            sendKillProcess(words[1])
-            return "Process Killed"
+            return handleKillProcess(words)
         }
+
+        // change scheduler - sch
+        else if (words[0] === "sch"){
+            return handleChangeScheduler(words)
+        }
+
         // help - help
         else if (words[0] === "help"){
             setShowHelp(true)

@@ -108,6 +108,39 @@ class OperatingSystem:
         return json.loads(ret)
 
 
+    def change_scheduler(self, new_scheduler_name):
+
+        # check if current scheduler is already what we want to change it to
+        if (new_scheduler_name == "fifo" and self.scheduler.get_name() == "First In First Out Scheduler") or (new_scheduler_name == "round-robin" and self.scheduler.get_name() == "Round Robin Scheduler") or (new_scheduler_name == "mlfq" and self.scheduler.get_name() == "Multi-level Feedback Queue Scheduler"):
+            return False
+
+        match new_scheduler_name:
+            case "fifo":
+                self.scheduler = FirstInFirstOut()
+                
+            case "round-robin":
+                self.scheduler = RoundRobin()
+
+            case "mlfq":
+                self.scheduler = MultiLevelFeedbackQueues()
+
+            case _:
+                print("Unknown Scheduler: " + new_scheduler_name)
+                return False
+        
+        for process in self.process_table:
+            print(process)
+
+            # make sure process isn't blocked before adding to new scheduler
+            if not process.state == State.BLOCKED:
+                print("added")
+                self.scheduler.add_process(process)
+
+            else:
+                print("not added")
+
+        return True
+
 
     def run(self):
 

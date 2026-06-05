@@ -26,6 +26,16 @@ def kill_process():
     return jsonify({"status":"ok", "created": True}), 201
 
 
+# request to change scheduler
+@app.route("/changeScheduler", methods=['POST'])
+def change_scheduler():
+    new_scheduler = request.get_json()['scheduler']
+    changed = os.change_scheduler(new_scheduler)
+    print(changed)
+
+    return jsonify({"status":"ok", "created": True}), 201
+
+
 # boost processes to q0
 @app.route("/boostProcesses", methods=['POST'])
 def boost_processes():
